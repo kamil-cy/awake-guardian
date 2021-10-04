@@ -30,7 +30,7 @@ class PostInstallCommand(install):
 
 setup(
     name="awake-guardian",
-    version="1.0.0",
+    version="1.0.1",
     author="Kamil Cyganowski",
     author_email="kamil.cyganowski@gmail.com",
     packages=["awake_guardian"],
