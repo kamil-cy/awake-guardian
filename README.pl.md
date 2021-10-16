@@ -5,6 +5,7 @@
 ## O programie
 **AwakeGuardian** to program który pomoże Ci utrzymać świadomość i nie zasnąć przed komputerem.
 Program często poinformuje Cię kiedy wykryje brak Twojej aktywności przypominając, a później nękając Cię dźwiękowo.
+Ponadto aby zaoszczędzić pieniądze, komputer można uśpić lub wyłączyć.
 Został on zaprojektowany by zużywać najmniej pamięci jak się tylko da, więc wymagało to kilku kompromisów.
 
 ## Instalacja
@@ -16,17 +17,16 @@ Polega na różnych paczkach oprogramowania w zależności od używanego systemu
 Wszystkie wymgania powinny zostać zainstalowane automatycznie.
 
 ## Platformy
-**AwakeGuardian** działa na Linuksie i Windowsie, i stara się funkcjonować tak samo na każdym z nich.
-Ze względu na niektóre techniczne różnice pomiędzy systemami jest tylko kilka różnych podejść odnośnie niektórych aspektów, jak na przykład to jak uruchomić program.
+Program działa na Linuksie i Windowsie, i stara się funkcjonować tak samo na każdym z nich.
+Ze względu na niektóre techniczne różnice pomiędzy systemami zmienia się podejście odnośnie niektórych aspektów funkcjonowania programu.
+
+**AwakeGuardian** to po prostu skrypt bez rozszerzenia pliku, który może być po prostu uruchomiony jako polecenie: `AwakeGuardian`
 
 ### Linux
-Na Linuksie to po prostu skrypt bez rozszerzenia pliku, który może być po prostu uruchomiony jako polecenie. 
-Po prostu napisz polecenie: `AwakeGuardian`
+W Linuksie polecenie to może być wpisane w dowolnym miejscu akceptującym komendy wiersza poleceń.
 
 ### Windows
-Na Windowsie pliki (skrypty Pythona) bez rozszerzania są dość skomplikowane do uruchomienia, więc żeby tego uniknąć jest po prostu skrypt bat, który uruchamia program bez okna konsoli.
-Ponadto zaraz po instalacji na Windowsie ten sam plik bat jest umieszczany na Twoim pulpicie, żeby ułatwić uruchomienie programu za pierwszym razem lub uruchomienie razem z systemem Windows.
-Jednakże możesz też uruchomić program w dowolnym momencie bez używania skryptu bat pisząc `AwakeGuardian.py` w *cmd* lub *PowerShellu*, ale w takim przypadku dostaniesz także okno konsoli Pythona które uruchamia program, więc zamykając to okno zamkniesz cały program.
+W Windowsie możesz uruchomić program w *cmd*, *PowerShellu* lub używając okna dialogowego Uruchamianie (kombinacja klawiszy *Logo+R*), jednakże zmienna środowiskowa *PATH* musi być poprawnie skonfigurowana, co można wykonać podczas instalacji Pythona, gdy zaznaczona zostanie opcja *Add Python to PATH*.
 
 ## Używanie
 
@@ -60,5 +60,13 @@ Po zamknięciu tego okna, menu w tacce systemowe zmieni się przykładowo na:
 **AwakeGuardian** może zostać skonfigurowany w oknie ustawień. 
 Możesz dostosować minutniki przypominania i nękania, włączać/wyłączać zwiększanie poziomu głośności w trakcie nękania oraz włączać/wyłączać uruchamiania programu ze startem systemu.
 Można także określić okno czasowe w którym program może działać.
+
+W sekcji zarządzania energią możesz określić czas po jakim zostanie wykonana akcja związana z oszczędzaniem energii.
+W zależności od możliwości systemu operacyjnego dostępne opcje to:
+- `Wyłącz` powoduje wyłączenie komputera po zadanym czasie nieaktywności.
+- `Uśpij` powoduje przejście komputera w stan niskiego poboru energii z możliwością szybkiego wznowienia pracy.
+- `Hibernuj` powoduje przejście komputera w stan głębokiego uśpienia (hibernacji) co maksymalnie ogranicza pobór energii, zrzut pamięci zwykle zapisywany jest na dysku twardym, przez co wznowienie pracy jest wolniejsze niż w stanie uśpienia, jednakże tryb ten nie zawsze jest obsługiwany.
+- `Uśpienie hybrydowe` jest połączeniem uśpienia i hibernacji, w którym Twoje programy i otwarte pliki rezydują w pamięci operacyjnej jak przy uśpieniu, a następnie stan pamięci zostaje zrzucony na dysk twardy jak przy hibernacji, dzięki czemu możesz szybko wznowić pracę, a w razie utraty zasilania system zostanie wznowiony jak przy hibernacji.
+- `Uśpij i zahibernuj` powoduje uśpienie komputera, a gdy przekroczony zostanie limit czasu lub pozostałej energii w baterii, wtedy komputer zostanie zahibernowany, co w przeciwieństwie do uśpienia hybrydowego nie spowoduje ewentualnego całkowitego wyczerpania baterii w stanie uśpienia.
 
 ![settings_dialog_en](docs/settings_dialog_pl.png)

@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 
-from PySide2.QtWidgets import QApplication
-from sys import argv, exit
+import awake_guardian
 
-from awake_guardian import AwakeGurdian
-
-if not QApplication.instance():
-    app = QApplication(argv)
-else:
-    app = QApplication.instance()
-aw = AwakeGurdian(app)
-exit(app.exec_())
+if __name__ == "__main__":
+    awake_guardian.main()

@@ -1,8 +1,10 @@
 from PySide2.QtCore import QTimer
 from datetime import datetime
 
-from .config import *
+from .config import Config, Icon
 from .hold_dialog import HoldDialog
+from .lang import L
+from .power_management import SYSTEM_COMMANDS
 from .settings_dialog import SettingsDialog
 from .sounds import Sound
 from .system_tray_icon import SystemTrayIcon
@@ -34,31 +36,36 @@ class AwakeGurdian:
         else:
             self.resume()
 
-    def resume(self, text=PAUSE):
+    def resume(self, text=L.PAUSE):
         self.hold_timer.stop()
-        self.tray_icon.setIcon(ICON_EYES)
+        self.tray_icon.setIcon(Icon.eyes)
         self.main_timer.start()
         self.tray_icon.systray_menu_main.setText(text)
-        self.tray_icon.systray_menu_main.setIcon(ICON_INACTIVE)
+        self.tray_icon.systray_menu_main.setIcon(Icon.inactive)
 
-    def hold(self, text=RESUME):
+    def hold(self, text=L.RESUME):
         self.dialog_hold.show()
-        self.tray_icon.setIcon(ICON_INACTIVE)
+        self.tray_icon.setIcon(Icon.inactive)
         self.main_timer.stop()
         self.tray_icon.systray_menu_main.setText(text)
-        self.tray_icon.systray_menu_main.setIcon(ICON_EYES)
+        self.tray_icon.systray_menu_main.setIcon(Icon.eyes)
 
     def loop(self):
-        if self.cfg.t_range_a:
+        if self.cfg.t_range:
             t = datetime.now().time()
             tf = self.cfg.t_range_f.toPython()
             tt = self.cfg.t_range_t.toPython()
             if tf > t > tt:
                 self.last_state = -1
-                self.tray_icon.setIcon(ICON_CLOCK)
+                self.tray_icon.setIcon(Icon.clock)
                 return
 
         idle_secs = UserActivity.check_idle()
+
+        if idle_secs >= self.cfg.t_to_event_m * 60 + self.cfg.t_to_event_s:
+            UserActivity.idle_secs = 0
+            list(SYSTEM_COMMANDS.values())[self.cfg.power_management_action]()
+
         if idle_secs >= self.cfg.t_to_nag_m * 60 + self.cfg.t_to_nag_s:
             self.nag()
             if self.cfg.inc_volume_nag:
@@ -68,17 +75,17 @@ class AwakeGurdian:
             self.remind()
             self.last_state = 1
         else:
-            self.tray_icon.setIcon(ICON_EYES)
+            self.tray_icon.setIcon(Icon.eyes)
             if self.last_state == 2:
                 VolumeControl.restore_volume()
             self.last_state = 0
 
     def remind(self):
-        self.tray_icon.setIcon(ICON_BEEP)
+        self.tray_icon.setIcon(Icon.beep)
         self.main_timer.setInterval(1000)
         Sound.remind()
 
     def nag(self):
-        self.tray_icon.setIcon(ICON_SHOUT)
+        self.tray_icon.setIcon(Icon.shout)
         self.main_timer.setInterval(2000)
         Sound.nag()

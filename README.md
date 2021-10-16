@@ -5,6 +5,7 @@
 ## About
 **AwakeGuardian** is a program that helps you keep awake and not to fall asleep in front of a computer. 
 The program frequently alerts you when detects your inactivity by reminding or later by nagging you using sound.
+Moreover to save your money your computer can be suspended or powered off.
 It was design to use as low memory as it is possible, so a few trade-offs has been taken.
 
 ## Installation
@@ -16,17 +17,16 @@ It relies on different packages according to the system that you use.
 All requirements should be installed automatically.
 
 ## Platforms
-**AwakeGuardian** is working on Linux and Windows, and tries to work the same on any system.
-Due to some technical differences between systems there are only few different approaches to some aspects, like how to run the program.
+The program is working on Linux and Windows, and tries to work the same on any of each.
+Due to some technical differences between systems there are only few different approaches to some aspects of how the program works.
+
+**AwakeGuardian** it's just a script without a file extension that can be run simply as a command: `AwakeGuardian`
 
 ### Linux
-On Linux it's just a script without a file extension that can be run simply as a command.
-Just type a command: `AwakeGuardian`
+On Linux this command can be typed wherever it's acceptable to pass a command to run.
 
 ### Windows
-On Windows, files (Python scripts) without an extension are very sophisticated to run, so to avoid all of this there is a simple batch script that runs the program without a console window.
-Also just after installation on Windows the same batch file is put into your Desktop folder to make it easier to run it for the first time or make it run along with Windows start.
-However you can run the program at any time without using the batch script by typing `AwakeGuardian.py` using *cmd* or *PowerShell*, but in that case you'll get also Python's console window that holds the running program, so closing this window closes the whole program.
+On Windows you can run the program by typing the command using *cmd*, *PowerShell* or *Run dialog box* (keyboard shortcut *Logo+R*), however environment variable *PATH* has to be configured properly, which can be done when installing Python if *Add Python to PATH* is checked.
 
 ## Using
 
@@ -60,5 +60,13 @@ After closing this dialog, the systray menu will change to e.g.:
 **AwakeGuardian** can be configured in the settings dialog. 
 You can adjust reminder or nag timers, toggle volume incrementing when nagging and toggle running the program on system startup.
 Also you can adjust the time window in which the program can work.
+
+Using power management section you can determine the the after which a specified action can occur for energy saving.
+Depending on the capabilities of the operating system, the available options are:
+- `Poweroff` turns off the computer after a preset time of inactivity.
+- `Suspend` puts the computer into a low-power state with the ability to quickly resume operation.
+- `Hibernate` causes the computer to go into deep sleep (hibernation), which minimizes energy consumption, memory dump is usually saved on the hard disk, so resuming work is slower than in the suspend mode, however this mode is not always supported.
+- `Hybrid sleep` is a combination of suspend and hibernation where your programs and opened files reside in the computer memory as if in the suspend mode, and then the memory state is dumped to the hard drive as if in the hibernation mode, so you can quickly resume work and in the case of a power loss the system will resume as if in the hibernation mode.
+- `Suspend then hibernate` puts the computer into the suspend mode, and when the time limit or the remaining battery power is exceeded, the computer will hibernate, which unlike the hybrid sleep mode, will not cause the battery to be completely depleted as if in the sleep mode.
 
 ![settings_dialog_en](https://github.com/kamil-cy/awake-guardian/raw/main/docs/settings_dialog_en.png)

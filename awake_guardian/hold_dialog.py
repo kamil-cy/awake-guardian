@@ -1,18 +1,18 @@
 from datetime import datetime, timedelta
 
+from PySide2.QtGui import Qt
 from PySide2.QtWidgets import (
     QDialog,
-    QLabel,
-    QVBoxLayout,
     QDialogButtonBox,
-    QSpinBox,
     QHBoxLayout,
-    QSpacerItem,
+    QLabel,
     QSizePolicy,
+    QSpacerItem,
+    QSpinBox,
+    QVBoxLayout,
 )
-from PySide2.QtGui import Qt
 
-from .config import *
+from .lang import L
 
 
 class HoldDialog(QDialog):
@@ -24,13 +24,12 @@ class HoldDialog(QDialog):
         self.setWindowFlag(Qt.WindowStaysOnTopHint, True)
         self.setWindowFlag(Qt.WindowCloseButtonHint, False)
 
-        self.buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-        self.setWindowTitle(PAUSE)
+        buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+        self.setWindowTitle(L.PAUSE)
 
-        hold_label = QLabel()
-        hold_label.setText(PAUSE_LABEL)
+        hold_label = QLabel(L.PAUSE_LABEL)
         self.hold_m_spinbox = QSpinBox(
-            value=aw.cfg.last_hold_time, maximum=1440, suffix=SUFFIX_MINUTES
+            value=aw.cfg.last_hold_time, maximum=1440, suffix=L.SUFFIX_MINUTES
         )
         self.hold_m_spinbox.valueChanged.connect(lambda val: aw.cfg.set_hold_time(val))
 
@@ -44,17 +43,17 @@ class HoldDialog(QDialog):
 
         layout.addLayout(hold_hbox)
 
-        ok_cancel = QDialogButtonBox(standardButtons=self.buttons)
-        ok_cancel.accepted.connect(self.ok)
-        ok_cancel.rejected.connect(self.cancel)
+        self.button_box = QDialogButtonBox(standardButtons=buttons)
+        self.button_box.accepted.connect(self.ok)
+        self.button_box.rejected.connect(self.cancel)
 
-        layout.addWidget(ok_cancel)
+        layout.addWidget(self.button_box)
         self.setLayout(layout)
 
     def ok(self):
         lht = self.aw.cfg.last_hold_time * 60
         t = datetime.now() + timedelta(0, lht)
-        self.aw.hold(f'{RESUME} ({STR_AUTO}: {t.strftime("%H:%M:%S")})')
+        self.aw.hold(f'{L.RESUME} ({L.STR_AUTO}: {t.strftime("%H:%M:%S")})')
         self.aw.hold_timer.singleShot(lht * 1000, self.aw.resume)
         self.aw.cfg.save_config()
         self.close()
