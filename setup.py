@@ -34,5 +34,5 @@ setup(
     python_requires=">=3.6",
     scripts=["bin/AwakeGuardian"],
     url="https://github.com/kamil-cy/awake-guardian",
-    version="1.1.0",
+    version="1.1.1",
 )

@@ -73,7 +73,7 @@ class SettingsDialog(QDialog):
         action_hbox = QHBoxLayout()
         action_label = QLabel(L.PWRMNGMT_ACTION)
         self.pma = QComboBox()
-        self.pma.addItems(SYSTEM_COMMANDS.keys())
+        self.pma.addItems(list(SYSTEM_COMMANDS.keys()))  # FIXME for Python 3.10
         action_hbox.addWidget(action_label)
         action_hbox.addWidget(self.pma)
         powermngmt_layout.addLayout(action_hbox)
@@ -112,6 +112,7 @@ class SettingsDialog(QDialog):
         layout.addWidget(self.time_range_group_box)
 
         buttons = QDialogButtonBox.Ok | QDialogButtonBox.RestoreDefaults
+        self.button_box = None  # FIXME for Python 3.10
         self.button_box = QDialogButtonBox(buttons)
         layout.addWidget(self.button_box)
 
