@@ -1,6 +1,5 @@
 from appdirs import AppDirs
 from yaml import safe_load, safe_dump
-from yaml.parser import ParserError
 from os import mkdir
 from os.path import dirname, isdir
 from platform import system
@@ -197,12 +196,13 @@ class Config:
         open(self.config_file, "w")
 
     def load_config(self):
+        cfg = {}
         try:
-            cfg = safe_load(open(self.config_file))
-            if cfg is None:
-                cfg = {}
-        except ParserError:
-            cfg = safe_load("{}")
+            loaded = safe_load(open(self.config_file))
+            if loaded:
+                cfg = loaded
+        except:
+            pass
 
         self.profile = int(cfg.get(*defaults(P)))
         self.remind = int(cfg.get(*defaults(R)))
