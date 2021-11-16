@@ -5,7 +5,7 @@ from .awake_guardian import AwakeGurdian
 
 
 def main():
-    from PySide2.QtWidgets import QApplication
+    from PySide6.QtWidgets import QApplication
     from sys import argv, exit
 
     if not QApplication.instance():

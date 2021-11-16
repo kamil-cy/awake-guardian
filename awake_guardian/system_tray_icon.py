@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QMenu, QSystemTrayIcon
+from PySide6.QtWidgets import QMenu, QSystemTrayIcon
 
 from .config import Icon
 from .lang import L

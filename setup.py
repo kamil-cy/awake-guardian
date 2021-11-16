@@ -17,9 +17,9 @@ setup(
     entry_points={"gui_scripts": ["AwakeGuardian = awake_guardian:main"]},
     install_requires=[
         "appdirs",
-        "configparser",
         "pynput",
-        "PySide2",
+        "PySide6",
+        "pyyaml",
         "pyalsaaudio;platform_system=='Linux'",
         "simpleaudio;platform_system=='Linux'",
         "playsound==1.2.2;platform_system=='Windows'",
@@ -34,5 +34,5 @@ setup(
     python_requires=">=3.6",
     scripts=["bin/AwakeGuardian"],
     url="https://github.com/kamil-cy/awake-guardian",
-    version="1.1.1",
+    version="1.2.0",
 )

@@ -58,10 +58,10 @@ After closing this dialog, the systray menu will change to e.g.:
 
 ### Settings
 **AwakeGuardian** can be configured in the settings dialog. 
-You can adjust reminder or nag timers, toggle volume incrementing when nagging and toggle running the program on system startup.
+You can adjust reminder or nag timers, toggle volume incrementing when reminding or nagging and toggle running the program on system startup.
 Also you can adjust the time window in which the program can work.
 
-Using power management section you can determine the the after which a specified action can occur for energy saving.
+Using power management section you can determine the time after which a specified action can occur for energy saving.
 Depending on the capabilities of the operating system, the available options are:
 - `Poweroff` turns off the computer after a preset time of inactivity.
 - `Suspend` puts the computer into a low-power state with the ability to quickly resume operation.
@@ -70,3 +70,18 @@ Depending on the capabilities of the operating system, the available options are
 - `Suspend then hibernate` puts the computer into the suspend mode, and when the time limit or the remaining battery power is exceeded, the computer will hibernate, which unlike the hybrid sleep mode, will not cause the battery to be completely depleted as if in the sleep mode.
 
 ![settings_dialog_en](https://github.com/kamil-cy/awake-guardian/raw/main/docs/settings_dialog_en.png)
+
+#### Settings profiles
+
+```
+Profile                                  | Remind     | Nag        | Power management
+-----------------------------------------+------------+------------+------------------
+Slow falling asleep                      | yes, 10:00 | yes, 15:00 | no
+Quick falling asleep                     | yes, 05:00 | yes, 10:00 | no
+Power saving                             | no         | no         | yes, 10:00, Sleep
+Extreme power saving                     | no         | no         | yes, 05:00, Sleep
+Power saving with remind                 | yes, 09:00 | no         | yes, 10:00, Sleep
+Extreme power saving with remind         | yes, 04:00 | no         | yes, 05:00, Sleep
+Power saving with remind and nag         | yes, 08:00 | yes, 09:00 | yes, 10:00, Sleep
+Extreme power saving with remind and nag | yes, 03:00 | yes, 04:00 | yes, 05:00, Sleep
+```

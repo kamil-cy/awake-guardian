@@ -6,11 +6,16 @@ strings = {
         "pause": "Wstrzymaj",
         "pause_label": "Wstrzymanie działania na czas: ",
         "settings": "Ustawienia",
+        "p": "Profil: ",
+        "r": "Przypominanie: ",
+        "n": "Nękanie: ",
         "tr": "Czas przypomnienia: ",
         "tn": "Czas nękania: ",
-        "ing": "Zwiększaj głośność nękania",
+        "ivr": "Zwiększaj głośność przypominania",
+        "ivn": "Zwiększaj głośność nękania",
         "exit": "Zakończ",
         "resume": "Wznów",
+        "suffix_hours": " godziny(y)",
         "suffix_minutes": " minut(y)",
         "suffix_seconds": " sekund(y)",
         "auto": "automatycznie",
@@ -30,6 +35,21 @@ strings = {
         "te": "Czas zdarzenia",
     }
 }
+lists = {
+    "pl_PL": {
+        "profiles": [
+            "Własny",
+            "Wolne zasypianie",
+            "Szybkie zasypianie",
+            "Oszczędzanie energii",
+            "Ekstremalne oszczędzanie energii",
+            "Oszczędzanie energii z przypomnieniem",
+            "Ekstremalne oszczędzanie energii z przypomnieniem",
+            "Oszczędzanie energii z przypomnieniem i nękaniem",
+            "Ekstremalne oszczędzanie energii z przypomnieniem i nękaniem",
+        ]
+    }
+}
 
 
 class L:
@@ -38,11 +58,16 @@ class L:
     PAUSE = strings.get(locale, {}).get("pause", "Pause")
     PAUSE_LABEL = strings.get(locale, {}).get("pause_label", "Pause for")
     SETTINGS = strings.get(locale, {}).get("settings", "Settings")
+    P = strings.get(locale, {}).get("p", "Profile")
+    R = strings.get(locale, {}).get("r", "Remind")
+    N = strings.get(locale, {}).get("n", "Nag")
     TR = strings.get(locale, {}).get("tr", "Time of reminder")
     TN = strings.get(locale, {}).get("tn", "Time of nagging")
-    ING = strings.get(locale, {}).get("ing", "Increment volume when nagging")
+    IVR = strings.get(locale, {}).get("ivr", "Increment volume when reminding")
+    IVN = strings.get(locale, {}).get("ivn", "Increment volume when nagging")
     EXIT = strings.get(locale, {}).get("exit", "Exit")
     RESUME = strings.get(locale, {}).get("resume", "Resume")
+    SUFFIX_HOURS = strings.get(locale, {}).get("suffix_hours", " hour(s)")
     SUFFIX_MINUTES = strings.get(locale, {}).get("suffix_minutes", " minute(s)")
     SUFFIX_SECONDS = strings.get(locale, {}).get("suffix_seconds", " second(s)")
     STR_AUTO = strings.get(locale, {}).get("auto", "automatically")
@@ -65,3 +90,18 @@ class L:
         "pwrmngmt_a_sth", "Suspend then hibernate"
     )
     TE = strings.get(locale, {}).get("te", "Time of event")
+
+    LIST_PROFILES = lists.get(locale, {}).get(
+        "profiles",
+        [
+            "Custom",
+            "Slow falling asleep",
+            "Quick falling asleep",
+            "Power saving",
+            "Extreme power saving",
+            "Power saving with remind",
+            "Extreme power saving with remind",
+            "Power saving with remind and nag",
+            "Extreme power saving with remind and nag",
+        ],
+    )

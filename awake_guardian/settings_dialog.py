@@ -1,5 +1,5 @@
-from PySide2.QtGui import Qt
-from PySide2.QtWidgets import (
+from PySide6.QtGui import Qt
+from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDialog,
@@ -12,6 +12,7 @@ from PySide2.QtWidgets import (
     QSpinBox,
     QTimeEdit,
     QVBoxLayout,
+    QFrame,
 )
 
 from .autostart import create_autostart, is_autostart, remove_autostart
@@ -33,30 +34,49 @@ class SettingsDialog(QDialog):
         self.setWindowFlag(Qt.WindowCloseButtonHint, False)
         self.setWindowTitle(L.SETTINGS)
 
-        layout = QVBoxLayout()
+        profile_hbox = QHBoxLayout()
+        profile_label = QLabel(L.P)
 
+        self.profile = QComboBox()
+        self.profile.addItems(L.LIST_PROFILES)
+        profile_hbox.addWidget(profile_label)
+        profile_hbox.addWidget(self.profile)
+
+        line = QFrame()
+        line.setFrameShape(QFrame.HLine)
+        line.setFrameShadow(QFrame.Sunken)
+
+        self.reminder_group_box = QGroupBox(L.R)
+        self.reminder_group_box.setCheckable(True)
         remind_label = QLabel(L.TR)
         self.remind_m_spinbox = QSpinBox(maximum=59, suffix=L.SUFFIX_MINUTES)
         self.remind_s_spinbox = QSpinBox(maximum=59, suffix=L.SUFFIX_SECONDS)
+        self.inc_volume_remind_checkbox = QCheckBox(L.IVR)
+        remind_vbox = QVBoxLayout()
         remind_hbox = QHBoxLayout()
         remind_hbox.addWidget(remind_label)
         remind_hbox.addSpacerItem(spacer())
         remind_hbox.addWidget(self.remind_m_spinbox)
         remind_hbox.addWidget(self.remind_s_spinbox)
-        layout.addLayout(remind_hbox)
+        remind_vbox.addLayout(remind_hbox)
+        remind_vbox.addWidget(self.inc_volume_remind_checkbox)
+        self.reminder_group_box.setLayout(remind_vbox)
 
+        self.nag_group_box = QGroupBox(L.N)
+        self.nag_group_box.setCheckable(True)
         nag_label = QLabel(L.TN)
         self.nag_m_spinbox = QSpinBox(maximum=59, suffix=L.SUFFIX_MINUTES)
         self.nag_s_spinbox = QSpinBox(maximum=59, suffix=L.SUFFIX_SECONDS)
+        self.inc_volume_nag_checkbox = QCheckBox(L.IVN)
+        nag_vbox = QVBoxLayout()
         nag_hbox = QHBoxLayout()
         nag_hbox.addWidget(nag_label)
         nag_hbox.addSpacerItem(spacer())
         nag_hbox.addWidget(self.nag_m_spinbox)
         nag_hbox.addWidget(self.nag_s_spinbox)
-        layout.addLayout(nag_hbox)
-
-        self.inc_volume_nag_checkbox = QCheckBox(L.ING)
-        layout.addWidget(self.inc_volume_nag_checkbox)
+        nag_vbox.addLayout(nag_hbox)
+        nag_vbox.addWidget(self.inc_volume_nag_checkbox)
+        self.nag_group_box.setLayout(nag_vbox)
 
         self.powermngmt_group_box = QGroupBox(L.PWRMNGMT)
         self.powermngmt_group_box.setCheckable(True)
@@ -73,12 +93,15 @@ class SettingsDialog(QDialog):
         action_hbox = QHBoxLayout()
         action_label = QLabel(L.PWRMNGMT_ACTION)
         self.pma = QComboBox()
-        self.pma.addItems(list(SYSTEM_COMMANDS.keys()))  # FIXME for Python 3.10
+        self.pma.addItems(list(SYSTEM_COMMANDS.keys()))
         action_hbox.addWidget(action_label)
         action_hbox.addWidget(self.pma)
         powermngmt_layout.addLayout(action_hbox)
         self.powermngmt_group_box.setLayout(powermngmt_layout)
-        layout.addWidget(self.powermngmt_group_box)
+
+        line2 = QFrame()
+        line2.setFrameShape(QFrame.HLine)
+        line2.setFrameShadow(QFrame.Sunken)
 
         s = system()
         if s == "Windows":
@@ -93,7 +116,6 @@ class SettingsDialog(QDialog):
 
         self.autostart_checkbox = QCheckBox(str_autostart)
         self.autostart_checkbox.setEnabled(supported_system)
-        layout.addWidget(self.autostart_checkbox)
 
         self.time_range_group_box = QGroupBox(L.WOITM)
         self.time_range_group_box.setCheckable(True)
@@ -109,24 +131,35 @@ class SettingsDialog(QDialog):
         time_range_layout.addWidget(time_range_to_label)
         time_range_layout.addWidget(self.time_range_to)
         self.time_range_group_box.setLayout(time_range_layout)
-        layout.addWidget(self.time_range_group_box)
 
-        buttons = QDialogButtonBox.Ok | QDialogButtonBox.RestoreDefaults
-        self.button_box = None  # FIXME for Python 3.10
+        buttons = QDialogButtonBox.Close | QDialogButtonBox.RestoreDefaults
         self.button_box = QDialogButtonBox(buttons)
-        layout.addWidget(self.button_box)
 
+        layout = QVBoxLayout()
+        layout.addLayout(profile_hbox)
+        layout.addWidget(line)
+        layout.addWidget(self.reminder_group_box)
+        layout.addWidget(self.nag_group_box)
+        layout.addWidget(self.powermngmt_group_box)
+        layout.addWidget(line2)
+        layout.addWidget(self.time_range_group_box)
+        layout.addWidget(self.autostart_checkbox)
+        layout.addWidget(self.button_box)
         self.setLayout(layout)
 
-        self.set_values()
         self.make_connections()
+        self.set_values_from_config()
 
-    def set_values(self):
+    def set_values_from_config(self):
+        self.profile.setCurrentIndex(self.aw.cfg.profile)
         self.remind_m_spinbox.setValue(self.aw.cfg.t_to_remind_m)
         self.remind_s_spinbox.setValue(self.aw.cfg.t_to_remind_s)
         self.nag_m_spinbox.setValue(self.aw.cfg.t_to_nag_m)
         self.nag_s_spinbox.setValue(self.aw.cfg.t_to_nag_s)
+        self.inc_volume_remind_checkbox.setChecked(self.aw.cfg.inc_volume_remind)
         self.inc_volume_nag_checkbox.setChecked(self.aw.cfg.inc_volume_nag)
+        self.reminder_group_box.setChecked(self.aw.cfg.remind)
+        self.nag_group_box.setChecked(self.aw.cfg.nag)
         self.powermngmt_group_box.setChecked(self.aw.cfg.power_management)
         self.event_m_spinbox.setValue(self.aw.cfg.t_to_event_m)
         self.event_s_spinbox.setValue(self.aw.cfg.t_to_event_s)
@@ -137,6 +170,7 @@ class SettingsDialog(QDialog):
         self.time_range_to.setTime(self.aw.cfg.t_range_t)
 
     def make_connections(self):
+        self.profile.currentIndexChanged.connect(self.set_profile)
         self.remind_m_spinbox.valueChanged.connect(
             lambda val: self.aw.cfg.set_time_to_remind(val, None)
         )
@@ -149,9 +183,14 @@ class SettingsDialog(QDialog):
         self.nag_s_spinbox.valueChanged.connect(
             lambda val: self.aw.cfg.set_time_to_nag(None, val)
         )
+        self.inc_volume_remind_checkbox.stateChanged.connect(
+            lambda val: self.aw.cfg.set_inc_volume_remind(val)
+        )
         self.inc_volume_nag_checkbox.stateChanged.connect(
             lambda val: self.aw.cfg.set_inc_volume_nag(val)
         )
+        self.reminder_group_box.toggled.connect(lambda val: self.aw.cfg.set_remind(val))
+        self.nag_group_box.toggled.connect(lambda val: self.aw.cfg.set_nag(val))
         self.powermngmt_group_box.toggled.connect(
             lambda val: self.aw.cfg.set_power_management(val)
         )
@@ -174,21 +213,26 @@ class SettingsDialog(QDialog):
             lambda val: self.set_time_range_from(val)
         )
         self.time_range_to.timeChanged.connect(lambda val: self.set_time_range_to(val))
-        self.button_box.accepted.connect(self.hide_dialog)
+        self.button_box.button(QDialogButtonBox.Close).clicked.connect(self.hide_dialog)
         self.button_box.button(QDialogButtonBox.RestoreDefaults).clicked.connect(
             self.restore_defaults
         )
 
     def hide_dialog(self):
+        self.aw.cfg.set_geometry_settings(self.geometry())
         self.aw.cfg.save_config()
         self.hide()
 
     def restore_defaults(self):
         self.aw.cfg.restore_defaults()
-        self.set_values()
+        self.set_values_from_config()
 
     def showEvent(self, event):
+        if self.aw.cfg.geometry_settings:
+            geometry = [int(s) for s in self.aw.cfg.geometry_settings.split()]
+            self.setGeometry(*geometry)
         self.autostart_checkbox.setChecked(is_autostart())
+        super(SettingsDialog, self).showEvent(event)
 
     def toggle_autostart(self, value):
         if value:
@@ -203,3 +247,85 @@ class SettingsDialog(QDialog):
     def set_time_range_to(self, val):
         self.aw.cfg.set_time_range_to(val)
         self.time_range_from.setMinimumTime(self.time_range_to.time().addSecs(1))
+
+    def set_profile(self, index):
+        self.aw.cfg.profile = index
+        if index:
+            self.reminder_group_box.setEnabled(False)
+            self.reminder_group_box.setChecked(False)
+            self.remind_m_spinbox.setValue(59)
+            self.remind_s_spinbox.setValue(59)
+            self.inc_volume_remind_checkbox.setEnabled(False)
+            self.nag_group_box.setEnabled(False)
+            self.nag_group_box.setChecked(False)
+            self.nag_m_spinbox.setValue(59)
+            self.nag_s_spinbox.setValue(59)
+            self.inc_volume_nag_checkbox.setEnabled(True)
+            self.powermngmt_group_box.setEnabled(False)
+            self.pma.setCurrentIndex(1)
+            self.event_m_spinbox.setValue(59)
+            self.event_s_spinbox.setValue(59)
+        else:
+            self.reminder_group_box.setEnabled(True)
+            self.nag_group_box.setEnabled(True)
+            self.powermngmt_group_box.setEnabled(True)
+            return
+
+        if index == 1:  # Slow falling asleep
+            self.reminder_group_box.setChecked(True)
+            self.remind_m_spinbox.setValue(10)
+            self.remind_s_spinbox.setValue(0)
+            self.nag_group_box.setChecked(True)
+            self.nag_m_spinbox.setValue(15)
+            self.nag_s_spinbox.setValue(0)
+            self.powermngmt_group_box.setChecked(False)
+        elif index == 2:  # Quick falling asleep
+            self.reminder_group_box.setChecked(True)
+            self.remind_m_spinbox.setValue(5)
+            self.remind_s_spinbox.setValue(0)
+            self.nag_group_box.setChecked(True)
+            self.nag_m_spinbox.setValue(10)
+            self.nag_s_spinbox.setValue(0)
+            self.powermngmt_group_box.setChecked(False)
+        elif index == 3:  # Power saving
+            self.powermngmt_group_box.setChecked(True)
+            self.event_m_spinbox.setValue(10)
+            self.event_s_spinbox.setValue(0)
+        elif index == 4:  # Extreme power saving
+            self.powermngmt_group_box.setChecked(True)
+            self.event_m_spinbox.setValue(5)
+            self.event_s_spinbox.setValue(0)
+        elif index == 5:  # Power saving with remind
+            self.reminder_group_box.setChecked(True)
+            self.remind_m_spinbox.setValue(9)
+            self.remind_s_spinbox.setValue(0)
+            self.powermngmt_group_box.setChecked(True)
+            self.event_m_spinbox.setValue(10)
+            self.event_s_spinbox.setValue(0)
+        elif index == 6:  # Extreme power saving with remind
+            self.reminder_group_box.setChecked(True)
+            self.remind_m_spinbox.setValue(4)
+            self.remind_s_spinbox.setValue(0)
+            self.powermngmt_group_box.setChecked(True)
+            self.event_m_spinbox.setValue(5)
+            self.event_s_spinbox.setValue(0)
+        elif index == 7:  # Power saving with remind and nag
+            self.reminder_group_box.setChecked(True)
+            self.remind_m_spinbox.setValue(8)
+            self.remind_s_spinbox.setValue(0)
+            self.nag_group_box.setChecked(True)
+            self.nag_m_spinbox.setValue(9)
+            self.nag_s_spinbox.setValue(0)
+            self.powermngmt_group_box.setChecked(True)
+            self.event_m_spinbox.setValue(10)
+            self.event_s_spinbox.setValue(0)
+        elif index == 8:  # Extreme power saving with remind and nag
+            self.reminder_group_box.setChecked(True)
+            self.remind_m_spinbox.setValue(3)
+            self.remind_s_spinbox.setValue(0)
+            self.nag_group_box.setChecked(True)
+            self.nag_m_spinbox.setValue(4)
+            self.nag_s_spinbox.setValue(0)
+            self.powermngmt_group_box.setChecked(True)
+            self.event_m_spinbox.setValue(5)
+            self.event_s_spinbox.setValue(0)

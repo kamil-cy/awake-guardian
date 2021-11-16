@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
-from PySide2.QtGui import Qt
-from PySide2.QtWidgets import (
+from PySide6.QtGui import Qt
+from PySide6.QtWidgets import (
     QDialog,
     QDialogButtonBox,
     QHBoxLayout,
@@ -28,10 +28,18 @@ class HoldDialog(QDialog):
         self.setWindowTitle(L.PAUSE)
 
         hold_label = QLabel(L.PAUSE_LABEL)
-        self.hold_m_spinbox = QSpinBox(
-            value=aw.cfg.last_hold_time, maximum=1440, suffix=L.SUFFIX_MINUTES
+        self.hold_h_spinbox = QSpinBox(
+            value=aw.cfg.last_hold_time // 60, maximum=23, suffix=L.SUFFIX_HOURS
         )
-        self.hold_m_spinbox.valueChanged.connect(lambda val: aw.cfg.set_hold_time(val))
+        self.hold_m_spinbox = QSpinBox(
+            value=aw.cfg.last_hold_time % 60, maximum=59, suffix=L.SUFFIX_MINUTES
+        )
+        self.hold_h_spinbox.valueChanged.connect(
+            lambda val: aw.cfg.set_hold_time(val * 60 + self.hold_m_spinbox.value())
+        )
+        self.hold_m_spinbox.valueChanged.connect(
+            lambda val: aw.cfg.set_hold_time(self.hold_h_spinbox.value() * 60 + val)
+        )
 
         spacer1 = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -39,6 +47,7 @@ class HoldDialog(QDialog):
         hold_hbox = QHBoxLayout()
         hold_hbox.addWidget(hold_label)
         hold_hbox.addSpacerItem(spacer1)
+        hold_hbox.addWidget(self.hold_h_spinbox)
         hold_hbox.addWidget(self.hold_m_spinbox)
 
         layout.addLayout(hold_hbox)
@@ -55,9 +64,16 @@ class HoldDialog(QDialog):
         t = datetime.now() + timedelta(0, lht)
         self.aw.hold(f'{L.RESUME} ({L.STR_AUTO}: {t.strftime("%H:%M:%S")})')
         self.aw.hold_timer.singleShot(lht * 1000, self.aw.resume)
+        self.aw.cfg.set_geometry_hold(self.geometry())
         self.aw.cfg.save_config()
         self.close()
 
     def cancel(self):
         self.aw.resume()
         self.close()
+
+    def showEvent(self, event):
+        if self.aw.cfg.geometry_hold:
+            geometry = [int(s) for s in self.aw.cfg.geometry_hold.split()]
+            self.setGeometry(*geometry)
+        super(HoldDialog, self).showEvent(event)

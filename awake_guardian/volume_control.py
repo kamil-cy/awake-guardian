@@ -20,9 +20,10 @@ if s == "Linux":
 
         @classmethod
         def restore_volume(cls):
-            m = Mixer()
-            m.setvolume(cls.original)
-            cls.original = None
+            if cls.original:
+                m = Mixer()
+                m.setvolume(cls.original)
+                cls.original = None
 
 
 elif s == "Windows":
@@ -48,4 +49,5 @@ elif s == "Windows":
 
         @classmethod
         def restore_volume(cls):
-            cls.set_volume(cls.original, None)
+            if cls.original:
+                cls.set_volume(cls.original, None)

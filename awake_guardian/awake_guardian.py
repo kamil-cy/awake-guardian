@@ -1,4 +1,4 @@
-from PySide2.QtCore import QTimer
+from PySide6.QtCore import QTimer
 from datetime import datetime
 
 from .config import Config, Icon
@@ -62,23 +62,28 @@ class AwakeGurdian:
 
         idle_secs = UserActivity.check_idle()
 
-        if idle_secs >= self.cfg.t_to_event_m * 60 + self.cfg.t_to_event_s:
-            UserActivity.idle_secs = 0
-            list(SYSTEM_COMMANDS.values())[self.cfg.power_management_action]()
+        if self.cfg.power_management:
+            if idle_secs >= self.cfg.t_to_event_m * 60 + self.cfg.t_to_event_s:
+                UserActivity.idle_secs = 0
+                list(SYSTEM_COMMANDS.values())[self.cfg.power_management_action]()
 
-        if idle_secs >= self.cfg.t_to_nag_m * 60 + self.cfg.t_to_nag_s:
-            self.nag()
+        remind_seconds = self.cfg.t_to_remind_m * 60 + self.cfg.t_to_remind_s
+        nag_seconds = self.cfg.t_to_nag_m * 60 + self.cfg.t_to_nag_s
+        if self.cfg.remind and idle_secs >= remind_seconds:
+            if self.cfg.inc_volume_remind:
+                VolumeControl.raise_volume(1)
+            self.last_state = 1
+            self.remind()
+        if self.cfg.nag and idle_secs >= nag_seconds:
             if self.cfg.inc_volume_nag:
                 VolumeControl.raise_volume()
             self.last_state = 2
-        elif idle_secs >= self.cfg.t_to_remind_m * 60 + self.cfg.t_to_remind_s:
-            self.remind()
-            self.last_state = 1
-        else:
-            self.tray_icon.setIcon(Icon.eyes)
-            if self.last_state == 2:
+            self.nag()
+        if idle_secs < remind_seconds and idle_secs < nag_seconds:
+            if self.last_state:
+                self.tray_icon.setIcon(Icon.eyes)
                 VolumeControl.restore_volume()
-            self.last_state = 0
+                self.last_state = 0
 
     def remind(self):
         self.tray_icon.setIcon(Icon.beep)

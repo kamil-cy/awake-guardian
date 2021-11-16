@@ -58,7 +58,7 @@ Po zamknięciu tego okna, menu w tacce systemowe zmieni się przykładowo na:
 
 ### Ustawienia
 **AwakeGuardian** może zostać skonfigurowany w oknie ustawień. 
-Możesz dostosować minutniki przypominania i nękania, włączać/wyłączać zwiększanie poziomu głośności w trakcie nękania oraz włączać/wyłączać uruchamiania programu ze startem systemu.
+Możesz dostosować minutniki przypominania i nękania, włączać/wyłączać zwiększanie poziomu głośności w trakcie przypominania czy nękania oraz włączać/wyłączać uruchamiania programu ze startem systemu.
 Można także określić okno czasowe w którym program może działać.
 
 W sekcji zarządzania energią możesz określić czas po jakim zostanie wykonana akcja związana z oszczędzaniem energii.
@@ -70,3 +70,18 @@ W zależności od możliwości systemu operacyjnego dostępne opcje to:
 - `Uśpij i zahibernuj` powoduje uśpienie komputera, a gdy przekroczony zostanie limit czasu lub pozostałej energii w baterii, wtedy komputer zostanie zahibernowany, co w przeciwieństwie do uśpienia hybrydowego nie spowoduje ewentualnego całkowitego wyczerpania baterii w stanie uśpienia.
 
 ![settings_dialog_en](docs/settings_dialog_pl.png)
+
+#### Profile ustawień
+
+```
+Profil                                                       | Przypominanie | Nękanie       | Zarządzanie energią
+-------------------------------------------------------------+------------------+------------------+--------------
+Wolne zasypianie                                             | tak, 10:00    | tak, 15:00    | nie
+Szybkie zasypianie                                           | tak, 05:00    | tak, 10:00    | nie
+Oszczędzanie energii                                         | nie           | nie           | tak, 10:00, Uśpij
+Ekstremalne oszczędzanie energii                             | nie           | nie           | tak, 05:00, Uśpij
+Oszczędzanie energii z przypomnieniem                        | tak, 09:00    | nie           | tak, 10:00, Uśpij
+Ekstremalne oszczędzanie energii z przypomnieniem            | tak, 04:00    | nie           | tak, 05:00, Uśpij
+Oszczędzanie energii z przypomnieniem i nękaniem             | tak, 08:00    | tak, 09:00    | tak, 10:00, Uśpij
+Ekstremalne oszczędzanie energii z przypomnieniem i nękaniem | tak, 03:00    | tak, 04:00    | tak, 05:00, Uśpij
+```
