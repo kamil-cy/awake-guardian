@@ -11,6 +11,9 @@ It was design to use as low memory as it is possible, so a few trade-offs has be
 ## Installation
 ```pip install awake-guardian```
 
+**_Warning_**: If you are using Python 3.10 on Windows then `Microsoft Visual C++ 14.0 or greater` is required. You can get it with "Microsoft C++ Build Tools": https://visualstudio.microsoft.com/visual-cpp-build-tools/
+So if you want **Awake Guardian** working just after pip installation on Windows, please use Python 3.9.
+
 ## Requirements
 **AwakeGuardian** requires Python 3.6 or above.
 It relies on different packages according to the system that you use.

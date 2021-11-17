@@ -11,6 +11,9 @@ Został on zaprojektowany by zużywać najmniej pamięci jak się tylko da, wię
 ## Instalacja
 ```pip install awake-guardian```
 
+**_Uwaga_**: Jeżeli używasz Pythona 3.10 na Windows to `Microsoft Visual C++ 14.0 lub nowszy` jest wymagany. Możesz go uzyskać z "Microsoft C++ Build Tools": https://visualstudio.microsoft.com/visual-cpp-build-tools/
+Jeśli wiec chcesz by **Awake Guardian** działał od razu po instalacji z pip na Windowsie, to użyj proszę Pythona 3.9.
+
 ## Wymagania
 **AwakeGuardian** wymaga wersji Python 3.6 lub nowszej.
 Polega na różnych paczkach oprogramowania w zależności od używanego systemu.
