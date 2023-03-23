@@ -71,8 +71,8 @@ class Icon:
 
 
 class Audio:
-    coin = f"{path}/audio/coin.wav"
-    wilhelm = f"{path}/audio/wilhelm.wav"
+    coin = f"{path}/audio/coin.mp3"
+    wilhelm = f"{path}/audio/wilhelm.mp3"
 
 
 class Config:
