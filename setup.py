@@ -21,6 +21,7 @@ setup(
         "PySide6",
         "pyyaml",
         "playsound",
+        "pyalsaaudio;platform_system=='Linux'",
         "pycaw;platform_system=='Windows'",
     ],
     long_description=long_description,
@@ -31,5 +32,5 @@ setup(
     python_requires=">=3.6",
     scripts=["bin/AwakeGuardian"],
     url="https://github.com/kamil-cy/awake-guardian",
-    version="1.3.0",
+    version="1.3.1",
 )
